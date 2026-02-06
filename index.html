@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Viarune Cloud — презентация</title>
+  <meta name="color-scheme" content="dark" />
+  <style>
+    :root{
+      --bg0:#05070c;
+      --bg1:#070b13;
+      --card:#0b0f18;
+      --card2:#0a0e16;
+      --stroke:rgba(255,255,255,.08);
+      --stroke2:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.68);
+      --muted2:rgba(255,255,255,.52);
+      --accent:#ff8a1f;
+      --accent2:#ff6a00;
+      --ok:#42d392;
+      --warn:#ffcc66;
+      --shadow: 0 30px 90px rgba(0,0,0,.60);
+      --shadow2: 0 18px 50px rgba(0,0,0,.55);
+      --radius: 22px;
+      --radius2: 16px;
+      --maxw: 1180px;
+      --h1: clamp(32px, 4.2vw, 58px);
+      --h2: clamp(22px, 2.6vw, 34px);
+      --p:  clamp(15px, 1.3vw, 18px);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 30% -10%, rgba(255,138,31,.22), transparent 55%),
+        radial-gradient(900px 500px at 80% 20%, rgba(255,106,0,.12), transparent 55%),
+        radial-gradient(800px 600px at 30% 110%, rgba(60,110,255,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow:hidden;
+    }
+
+    /* subtle stars/noise */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background:
+        radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.12), transparent 45%),
+        radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,.10), transparent 45%),
+        radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,.08), transparent 45%),
+        radial-gradient(1px 1px at 85% 80%, rgba(255,255,255,.10), transparent 45%),
+        radial-gradient(1px 1px at 10% 85%, rgba(255,255,255,.08), transparent 45%);
+      opacity:.6;
+      pointer-events:none;
+      filter: blur(.2px);
+    }
+    body::after{
+      content:"";
+      position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      opacity:.09;
+      pointer-events:none;
+      mix-blend-mode:overlay;
+    }
+
+    /* layout */
+    .deck{
+      height:100%;
+      display:flex;
+      flex-direction:column;
+    }
+    .topbar{
+      height:62px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 0 22px;
+      gap:14px;
+      position:relative;
+      z-index:3;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:700;
+      letter-spacing:.2px;
+      opacity:.95;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #ffd6b0, var(--accent));
+      box-shadow: 0 0 0 6px rgba(255,138,31,.12);
+    }
+    .brand small{
+      font-weight:600;
+      color:var(--muted);
+    }
+    .controls{
+      display:flex; align-items:center; gap:10px;
+      color:var(--muted);
+      font-size:13px;
+      user-select:none;
+    }
+    .kbd{
+      font-family:var(--mono);
+      font-size:12px;
+      padding:3px 8px;
+      border:1px solid var(--stroke);
+      border-bottom-color: rgba(255,255,255,.18);
+      border-radius:10px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .stage{
+      flex:1;
+      display:grid;
+      place-items:center;
+      padding: 18px 22px 28px;
+      overflow:hidden;
+    }
+
+    .frame{
+      width:min(var(--maxw), 100%);
+      height:min(680px, calc(100vh - 120px));
+      position:relative;
+      border-radius: 28px;
+      background: rgba(5,8,14,.55);
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .frame::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 480px at 20% 10%, rgba(255,138,31,.18), transparent 55%),
+        radial-gradient(800px 420px at 75% 35%, rgba(255,106,0,.10), transparent 58%),
+        radial-gradient(700px 520px at 35% 120%, rgba(60,110,255,.08), transparent 62%);
+      opacity:.9;
+      pointer-events:none;
+    }
+
+    .slides{
+      position:absolute; inset:0;
+      display:flex;
+      transition: transform 420ms cubic-bezier(.2,.9,.2,1);
+      will-change: transform;
+    }
+    .slide{
+      width:100%;
+      height:100%;
+      flex: 0 0 100%;
+      padding: 44px 52px;
+      display:flex;
+      flex-direction:column;
+      gap: 22px;
+      position:relative;
+    }
+
+    /* typography */
+    h1,h2,h3,p{ margin:0; }
+    h1{ font-size:var(--h1); line-height:1.02; letter-spacing:-.8px; }
+    h2{ font-size:var(--h2); line-height:1.1; letter-spacing:-.3px; }
+    p{ font-size:var(--p); line-height:1.55; color:var(--muted); }
+
+    .lead{ max-width: 70ch; }
+    .eyebrow{
+      display:flex; align-items:center; gap:10px;
+      color:var(--muted);
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+    .eyebrow .bullet{
+      width:7px;height:7px;border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(255,138,31,.10);
+    }
+
+    /* UI bits */
+    .row{ display:flex; gap:16px; align-items:stretch; }
+    .col{ flex:1; display:flex; flex-direction:column; gap:16px; }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px 18px;
+      box-shadow: var(--shadow2);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(520px 220px at 20% 0%, rgba(255,138,31,.12), transparent 55%);
+      opacity:.8;
+      pointer-events:none;
+    }
+    .card h3{
+      font-size: 18px;
+      letter-spacing:-.2px;
+      margin-bottom: 10px;
+    }
+    .card p{ color:var(--muted2); }
+
+    .pillrow{ display:flex; gap:10px; flex-wrap:wrap; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.02);
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+    }
+    .pill .mini{
+      width:7px;height:7px;border-radius:50%;
+      background: rgba(255,255,255,.35);
+    }
+    .pill.accent{
+      border-color: rgba(255,138,31,.35);
+      background: rgba(255,138,31,.08);
+      color: rgba(255,232,220,.92);
+    }
+    .pill.accent .mini{ background: var(--accent); }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border:1px solid rgba(255,138,31,.25);
+      background: linear-gradient(180deg, rgba(255,138,31,1), rgba(255,106,0,1));
+      color:#101018;
+      font-weight:750;
+      letter-spacing:.2px;
+      box-shadow: 0 18px 60px rgba(255,106,0,.18);
+      width:max-content;
+    }
+    .btn.secondary{
+      background: rgba(255,255,255,.03);
+      color: rgba(255,255,255,.88);
+      border-color: var(--stroke2);
+      box-shadow:none;
+    }
+
+    .grid3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:16px;
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:16px;
+    }
+
+    .metric{
+      display:flex; flex-direction:column; gap:6px;
+      padding: 16px 16px;
+      border-radius: var(--radius2);
+      background: rgba(255,255,255,.02);
+      border:1px solid var(--stroke);
+    }
+    .metric .k{
+      font-size: 13px;
+      color: var(--muted2);
+    }
+    .metric .v{
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing:-.6px;
+      color: rgba(255,255,255,.92);
+    }
+    .metric .v .accent{ color: var(--accent); }
+
+    .table{
+      width:100%;
+      border-collapse: collapse;
+      overflow:hidden;
+      border-radius: var(--radius);
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.02);
+    }
+    .table th, .table td{
+      padding: 12px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      text-align:left;
+      vertical-align:top;
+      font-size: 14px;
+      color: rgba(255,255,255,.80);
+    }
+    .table th{
+      color: rgba(255,255,255,.92);
+      font-weight: 700;
+      background: rgba(255,255,255,.03);
+    }
+    .table tr:last-child td{ border-bottom:none; }
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.02);
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      margin-right:6px;
+      margin-bottom:6px;
+    }
+    .tag .dot2{
+      width:7px;height:7px;border-radius:50%;
+      background: rgba(255,255,255,.35);
+    }
+    .tag.ok{ border-color: rgba(66,211,146,.28); background: rgba(66,211,146,.08); }
+    .tag.ok .dot2{ background: var(--ok); }
+    .tag.acc{ border-color: rgba(255,138,31,.30); background: rgba(255,138,31,.09); }
+    .tag.acc .dot2{ background: var(--accent); }
+
+    /* footer progress */
+    .footer{
+      height:52px;
+      padding: 0 22px 14px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:14px;
+      color: var(--muted2);
+      position:relative;
+      z-index:3;
+      user-select:none;
+    }
+    .progress{
+      flex:1;
+      height:10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      border:1px solid var(--stroke);
+      overflow:hidden;
+      max-width: 520px;
+    }
+    .bar{
+      height:100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset;
+      transition: width 420ms cubic-bezier(.2,.9,.2,1);
+    }
+    .pager{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity:.9;
+    }
+    .hint{
+      font-size: 12px;
+      opacity:.85;
+      white-space:nowrap;
+    }
+
+    /* responsive */
+    @media (max-width: 980px){
+      .slide{ padding: 28px 22px; }
+      .grid3{ grid-template-columns: 1fr; }
+      .grid2{ grid-template-columns: 1fr; }
+      .row{ flex-direction:column; }
+      .frame{ border-radius: 18px; }
+      .topbar{ padding: 0 14px; }
+      .footer{ padding: 0 14px 12px; }
+      .controls{ display:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="deck">
+    <div class="topbar">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>Viarune Cloud</span>
+        <small>— инфраструктура без DevOps</small>
+      </div>
+      <div class="controls">
+        <span class="kbd">←</span><span class="kbd">→</span>
+        <span class="kbd">Space</span>
+        <span>перелистывание</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="frame" id="frame">
+        <div class="slides" id="slides">
+
+          <!-- 1: Cover -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Облачная платформа под ваши процессы</div>
+            <div class="row" style="align-items:flex-start; gap:22px;">
+              <div class="col" style="flex:1.1">
+                <h1>Viarune Cloud — инфраструктура без DevOps</h1>
+                <p class="lead">
+                  Разворачиваем облачную инфраструктуру, процессы разработки и доступы под ваши задачи —
+                  без собственного DevOps-отдела.
+                </p>
+                <div class="pillrow">
+                  <span class="pill accent"><span class="mini"></span>Без штатного DevOps-отдела</span>
+                  <span class="pill"><span class="mini"></span>От пилота до прома</span>
+                  <span class="pill"><span class="mini"></span>Серверы в РФ</span>
+                  <span class="pill"><span class="mini"></span>24/7 поддержка</span>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:4px;">
+                  <span class="btn">Связаться с нами</span>
+                  <span class="btn secondary">Посмотреть конфигурации</span>
+                </div>
+              </div>
+
+              <div class="col" style="flex:0.9">
+                <div class="card">
+                  <h3>Быстрый запуск</h3>
+                  <div class="grid2">
+                    <div class="metric">
+                      <div class="k">Экономия до</div>
+                      <div class="v"><span class="accent">80%</span></div>
+                    </div>
+                    <div class="metric">
+                      <div class="k">Рабочий контур</div>
+                      <div class="v"><span class="accent">1–2</span> дня</div>
+                    </div>
+                  </div>
+                  <p style="margin-top:10px">
+                    Вы платите за инфраструктуру и экспертизу, а не за постоянный штат DevOps.
+                  </p>
+                </div>
+
+                <div class="card">
+                  <h3>Что берём на себя</h3>
+                  <div class="tag acc"><span class="dot2"></span>CI/CD</div>
+                  <div class="tag acc"><span class="dot2"></span>Доступы</div>
+                  <div class="tag acc"><span class="dot2"></span>Мониторинг</div>
+                  <div class="tag acc"><span class="dot2"></span>Окружения</div>
+                  <div class="tag acc"><span class="dot2"></span>GitOps</div>
+                  <div class="tag acc"><span class="dot2"></span>Логи</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2: Pain / Problem -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Проблема</div>
+            <h2>Когда инфраструктура тормозит продукт</h2>
+            <p class="lead">
+              Команда растёт, релизы ускоряются — а DevOps превращается в узкое место: найм, онбординг, дежурства,
+              «работает только у меня» и хаос в доступах.
+            </p>
+
+            <div class="grid3">
+              <div class="card">
+                <h3>Долгий старт</h3>
+                <p>2–3 месяца на найм, закупки, настройку CI/CD и мониторинга.</p>
+              </div>
+              <div class="card">
+                <h3>Высокая стоимость</h3>
+                <p>Зарплаты, налоги, обучение, простой при найме и риски ухода ключевых людей.</p>
+              </div>
+              <div class="card">
+                <h3>Операционка 24/7</h3>
+                <p>Инциденты, дежурства, SLA, обновления, доступы, безопасность и 152-ФЗ.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3: Solution -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Решение</div>
+            <h2>Платформа под ключ: от пилота до продакшена</h2>
+            <p class="lead">
+              Мы разворачиваем ваш контур: инфраструктуру, процессы разработки и доступы.
+              Вы получаете готовый рабочий контур и поддержку — без собственного DevOps-отдела.
+            </p>
+
+            <div class="grid2">
+              <div class="card">
+                <h3>Что вы получаете</h3>
+                <div class="tag ok"><span class="dot2"></span>Kubernetes / окружения</div>
+                <div class="tag ok"><span class="dot2"></span>CI/CD (GitLab/Jenkins)</div>
+                <div class="tag ok"><span class="dot2"></span>Мониторинг (Grafana + алерты)</div>
+                <div class="tag ok"><span class="dot2"></span>Логи / трассировка</div>
+                <div class="tag ok"><span class="dot2"></span>VPN-контур и доступы</div>
+                <p style="margin-top:10px">Собираем из модулей то, что нужно вашей команде и продуктам.</p>
+              </div>
+
+              <div class="card">
+                <h3>Формат работы</h3>
+                <div class="metric">
+                  <div class="k">Срок запуска</div>
+                  <div class="v"><span class="accent">1–2</span> дня</div>
+                </div>
+                <div class="metric">
+                  <div class="k">Дальше</div>
+                  <div class="v">Поддержка + развитие</div>
+                </div>
+                <p style="margin-top:10px">
+                  Минимум согласований — максимум автоматизации. Вы фокусируетесь на продукте.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4: Value -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Почему это выгодно</div>
+            <h2>Экономия, скорость и предсказуемость</h2>
+
+            <div class="grid3">
+              <div class="card">
+                <h3>💰 80% экономии</h3>
+                <p>Платите за инфраструктуру и экспертизу, а не за постоянный штат DevOps.</p>
+              </div>
+              <div class="card">
+                <h3>⚡ Без DevOps</h3>
+                <p>Мы берём на себя CI/CD, доступы, мониторинг и окружения.</p>
+              </div>
+              <div class="card">
+                <h3>⏱️ Контур за 2 дня</h3>
+                <p>Быстрый запуск без «месяцев подготовки».</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Что ускоряется</h3>
+              <div class="pillrow">
+                <span class="pill accent"><span class="mini"></span>Релизы</span>
+                <span class="pill"><span class="mini"></span>Онбординг</span>
+                <span class="pill"><span class="mini"></span>Тестирование</span>
+                <span class="pill"><span class="mini"></span>Инциденты</span>
+                <span class="pill"><span class="mini"></span>Безопасность</span>
+                <span class="pill"><span class="mini"></span>Согласования</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5: What we deploy -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Что мы разворачиваем</div>
+            <h2>Сервисы и модули платформы</h2>
+            <p class="lead">Вы выбираете нужные компоненты. Мы собираем контур под вашу архитектуру и процессы.</p>
+
+            <div class="grid2">
+              <div class="card">
+                <h3>Инфраструктурные сервисы</h3>
+                <div class="tag acc"><span class="dot2"></span>Kubernetes</div>
+                <div class="tag acc"><span class="dot2"></span>Kafka</div>
+                <div class="tag acc"><span class="dot2"></span>RabbitMQ</div>
+                <div class="tag acc"><span class="dot2"></span>ClickHouse</div>
+                <div class="tag acc"><span class="dot2"></span>Apache Superset</div>
+                <div class="tag acc"><span class="dot2"></span>Dev/Test/Stage</div>
+                <div class="tag acc"><span class="dot2"></span>Мониторинг (Grafana)</div>
+                <div class="tag acc"><span class="dot2"></span>VPN-контур</div>
+                <p style="margin-top:10px">Фундамент для приложений, данных и наблюдаемости.</p>
+              </div>
+
+              <div class="card">
+                <h3>Процессные сервисы</h3>
+                <div class="tag ok"><span class="dot2"></span>GitLab CI/CD</div>
+                <div class="tag ok"><span class="dot2"></span>Jenkins</div>
+                <div class="tag ok"><span class="dot2"></span>ArgoCD (GitOps)</div>
+                <div class="tag ok"><span class="dot2"></span>Nexus</div>
+                <div class="tag ok"><span class="dot2"></span>Kiwi TCMS</div>
+                <p style="margin-top:10px">Инструменты разработки, тестирования и поставки.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 6: Plans -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Шаблонные тарифы</div>
+            <h2>Стартуйте с готового набора и расширяйте под себя</h2>
+
+            <div class="grid3">
+              <div class="card">
+                <h3>Базовый</h3>
+                <p>~20 чел · 3 сервиса</p>
+                <div style="margin-top:12px">
+                  <div class="tag"><span class="dot2"></span>Приоритетная поддержка: нет</div>
+                  <div class="tag"><span class="dot2"></span>Помощь DevOps: нет</div>
+                  <div class="tag"><span class="dot2"></span>Внешний контур: нет</div>
+                </div>
+              </div>
+
+              <div class="card" style="border-color: rgba(255,138,31,.22);">
+                <h3>Профессиональный</h3>
+                <p>~80 чел · 7 сервисов</p>
+                <div style="margin-top:12px">
+                  <div class="tag ok"><span class="dot2"></span>Приоритетная поддержка: да</div>
+                  <div class="tag ok"><span class="dot2"></span>Помощь DevOps: да</div>
+                  <div class="tag"><span class="dot2"></span>Внешний контур: нет</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <h3>Enterprise</h3>
+                <p>~300 чел · 12 сервисов</p>
+                <div style="margin-top:12px">
+                  <div class="tag ok"><span class="dot2"></span>Приоритетная поддержка: да</div>
+                  <div class="tag ok"><span class="dot2"></span>Помощь DevOps: да</div>
+                  <div class="tag acc"><span class="dot2"></span>Внешний контур: есть задачи</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Важно</h3>
+              <p>
+                Тарифы — это «быстрый старт». Итоговая конфигурация зависит от сервисов, окружений,
+                требований ИБ и сценария (on-prem / гибрид / в нашем контуре).
+              </p>
+            </div>
+          </section>
+
+          <!-- 7: Calculator / estimate -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Оценка стоимости</div>
+            <h2>Калькулятор конфигурации</h2>
+            <p class="lead">
+              Вы выбираете продукты и параметры — получаете предварительную оценку сроков и состава контура.
+              Точную смету фиксируем после короткого созвона.
+            </p>
+
+            <div class="grid2">
+              <div class="card">
+                <h3>Пример оценки</h3>
+                <div class="metric">
+                  <div class="k">Команда</div>
+                  <div class="v">2187 человек</div>
+                </div>
+                <div class="metric">
+                  <div class="k">Сервисы</div>
+                  <div class="v"><span class="accent">1</span> сервис</div>
+                </div>
+                <div class="metric">
+                  <div class="k">Срок запуска</div>
+                  <div class="v">~ <span class="accent">7</span> рабочих дней</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <h3>Опции</h3>
+                <div class="tag"><span class="dot2"></span>Обычная поддержка</div>
+                <div class="tag"><span class="dot2"></span>Без доп. задач DevOps</div>
+                <div class="tag"><span class="dot2"></span>Без внешнего контура</div>
+                <p style="margin-top:10px">
+                  Можно «скопировать ссылку» на конфигурацию и согласовать внутри команды.
+                </p>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+                  <span class="btn">Заказать инфраструктуру</span>
+                  <span class="btn secondary">Скопировать конфигурацию</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 8: Dev/Test VMs -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Dev/Test виртуальные серверы</div>
+            <h2>Машины «как корзина» для разработки и тестов</h2>
+            <p class="lead">
+              Добавляете несколько конфигураций серверов для Dev/Test (не прод). Для продакшена предлагаем отдельные сервера и SLA 99.9%+.
+            </p>
+
+            <div class="grid2">
+              <div class="card">
+                <h3>Пример конфигурации</h3>
+                <table class="table">
+                  <tr><th>Параметр</th><th>Значение</th></tr>
+                  <tr><td>vCPU</td><td>2</td></tr>
+                  <tr><td>RAM</td><td>4 ГБ</td></tr>
+                  <tr><td>SSD</td><td>50 ГБ</td></tr>
+                  <tr><td>Оценка</td><td><span style="color:var(--accent); font-weight:800;">~ 430 ₽/мес</span> за машину</td></tr>
+                </table>
+                <p style="margin-top:10px">Под Dev/Test: SLA 99% (не для продакшена).</p>
+              </div>
+
+              <div class="card">
+                <h3>Зачем это нужно</h3>
+                <div class="tag ok"><span class="dot2"></span>Стенды без закупок</div>
+                <div class="tag ok"><span class="dot2"></span>Быстрый онбординг</div>
+                <div class="tag ok"><span class="dot2"></span>Безопасные доступы</div>
+                <div class="tag ok"><span class="dot2"></span>Повторяемые окружения</div>
+                <p style="margin-top:10px">
+                  Поддерживает быстрые пилоты, регрессии, демо и внутренние контуры.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 9: Advantages -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Преимущества платформы</div>
+            <h2>Почему Viarune лучше, чем in-house DevOps</h2>
+            <p class="lead">
+              Снижаем стоимость владения инфраструктурой, ускоряем запуск и берём на себя операционку — от развёртывания до поддержки 24/7.
+            </p>
+
+            <div class="grid3">
+              <div class="card">
+                <h3>🌙 Поддержка 24/7</h3>
+                <p>Дежурные инженеры следят за алертами и инцидентами круглосуточно.</p>
+              </div>
+              <div class="card">
+                <h3>🇷🇺 Серверы в РФ</h3>
+                <p>Соблюдаем требования 152-ФЗ и импортозамещение из коробки.</p>
+              </div>
+              <div class="card">
+                <h3>🧠 Архитекторы и DevOps</h3>
+                <p>10+ лет опыта в DevOps и продакшен-контурах, проектируем под рост.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 10: Comparison -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Сравнение</div>
+            <h2>In-house DevOps vs Viarune Cloud</h2>
+
+            <table class="table">
+              <tr>
+                <th>Критерий</th>
+                <th>In-house DevOps</th>
+                <th>Viarune Cloud</th>
+              </tr>
+              <tr>
+                <td>Стоимость</td>
+                <td>Зарплаты 2–3 DevOps, налоги, обучение, простой при найме</td>
+                <td>Фиксируемая подписка за контур и поддержку, без постоянного штата</td>
+              </tr>
+              <tr>
+                <td>Срок запуска</td>
+                <td>2–3 месяца: найм, закупка, настройка, CI/CD, мониторинг</td>
+                <td><span style="color:var(--accent); font-weight:800;">1–2 дня</span> до рабочего контура</td>
+              </tr>
+              <tr>
+                <td>Поддержка</td>
+                <td>Нужно строить on-call и процессы реагирования</td>
+                <td>24/7 мониторинг и реагирование, выделенные инженеры и SLA</td>
+              </tr>
+              <tr>
+                <td>152-ФЗ / ИБ</td>
+                <td>Самостоятельный выбор площадок и соответствия требованиям</td>
+                <td>Серверы в РФ, соблюдение требований из коробки</td>
+              </tr>
+              <tr>
+                <td>Экспертиза</td>
+                <td>Риски ухода людей, рост экспертизы внутри</td>
+                <td>Архитекторы с 10+ годами опыта</td>
+              </tr>
+            </table>
+          </section>
+
+          <!-- 11: Cases -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Кейсы внедрений</div>
+            <h2>Как это работает в бою</h2>
+
+            <div class="grid3">
+              <div class="card">
+                <h3>ООО «Латекстид»</h3>
+                <p><b style="color:rgba(255,255,255,.88)">Задача:</b> стабильный dev/test, задачи и код, мониторинг.</p>
+                <p><b style="color:rgba(255,255,255,.88)">Решение:</b> dev+test, лендинг во внешнем контуре, Jira+Confluence, GitLab автодеплой, логи, Grafana.</p>
+                <p><b style="color:rgba(255,255,255,.88)">Срок:</b> ~2 дня до рабочего контура.</p>
+              </div>
+
+              <div class="card">
+                <h3>ООО «Пэт проджект»</h3>
+                <p><b style="color:rgba(255,255,255,.88)">Задача:</b> безопасный контур без найма DevOps.</p>
+                <p><b style="color:rgba(255,255,255,.88)">Решение:</b> минимальный тариф: контур для задач, кода и файлов + доступы.</p>
+                <p><b style="color:rgba(255,255,255,.88)">Срок:</b> запуск за 2 дня.</p>
+              </div>
+
+              <div class="card">
+                <h3>Клиент под NDA</h3>
+                <p><b style="color:rgba(255,255,255,.88)">Задача:</b> много стендов, сложные пайплайны, прод-сервисы.</p>
+                <p><b style="color:rgba(255,255,255,.88)">Решение:</b> 5 стендов, GitLab пайплайны, Jira/Confluence, мониторинг и трассировка.</p>
+                <p><b style="color:rgba(255,255,255,.88)">Эффект:</b> экономия до 80% (500k+ ₽/мес).</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 12: FAQ + Contacts -->
+          <section class="slide">
+            <div class="eyebrow"><span class="bullet"></span>Старт</div>
+            <h2>Начните с нами — бесплатно протестируйте окружение</h2>
+            <p class="lead">
+              Заполните короткую форму — предложим конфигурацию под ваши задачи и поднимем тестовый контур.
+            </p>
+
+            <div class="grid2">
+              <div class="card">
+                <h3>FAQ (коротко)</h3>
+                <div class="tag acc"><span class="dot2"></span>Как быстро запускается? — 1–2 дня до рабочего контура</div>
+                <div class="tag ok"><span class="dot2"></span>Можно ли на своём железе? — да (on-prem / гибрид)</div>
+                <div class="tag"><span class="dot2"></span>Можно ли подключать свои сервисы? — да</div>
+                <div class="tag"><span class="dot2"></span>Где хранятся данные? — в РФ (по требованиям)</div>
+                <div class="tag"><span class="dot2"></span>Платное ПО? — обсудим и интегрируем</div>
+              </div>
+
+              <div class="card">
+                <h3>Контакты</h3>
+                <div class="metric">
+                  <div class="k">Telegram</div>
+                  <div class="v">@viarune</div>
+                </div>
+                <div class="metric">
+                  <div class="k">Email</div>
+                  <div class="v">cloud@viarune.com</div>
+                </div>
+                <div class="metric">
+                  <div class="k">Телефон</div>
+                  <div class="v">+7 909 066 0955</div>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+                  <span class="btn">Отправить заявку</span>
+                  <span class="btn secondary">Назначить созвон</span>
+                </div>
+              </div>
+            </div>
+
+            <p style="margin-top:-6px; color:rgba(255,255,255,.40); font-size:12px;">
+              © 2026 Viarune Cloud · ООО «Латекстид» · ИНН 7000011580 · ОГРН 1237000009025
+            </p>
+          </section>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="progress" aria-label="progress"><div class="bar" id="bar"></div></div>
+      <div class="pager" id="pager">01 / 12</div>
+      <div class="hint">ESC — обзор · Enter — полноэкранный</div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const slides = document.getElementById('slides');
+      const bar = document.getElementById('bar');
+      const pager = document.getElementById('pager');
+      const frame = document.getElementById('frame');
+
+      const total = slides.children.length;
+      let idx = 0;
+
+      function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
+      function pad2(n){ return String(n).padStart(2,'0'); }
+
+      function render(){
+        idx = clamp(idx, 0, total - 1);
+        slides.style.transform = `translateX(${-idx * 100}%)`;
+        bar.style.width = ((idx+1)/total*100).toFixed(2) + '%';
+        pager.textContent = `${pad2(idx+1)} / ${pad2(total)}`;
+        // update URL hash for easy sharing
+        history.replaceState(null, '', '#' + (idx+1));
+      }
+
+      function next(){ idx++; render(); }
+      function prev(){ idx--; render(); }
+      function first(){ idx = 0; render(); }
+      function last(){ idx = total-1; render(); }
+
+      // overview mode (ESC)
+      let overview = false;
+      function setOverview(on){
+        overview = on;
+        if(on){
+          slides.style.transition = 'transform 280ms cubic-bezier(.2,.9,.2,1)';
+          slides.style.transform = 'translateX(0)';
+          frame.style.overflow = 'auto';
+          frame.style.padding = '18px';
+          slides.style.display = 'grid';
+          slides.style.gridTemplateColumns = 'repeat(auto-fit, minmax(320px, 1fr))';
+          slides.style.gap = '14px';
+          slides.style.height = 'auto';
+          Array.from(slides.children).forEach((s, i) => {
+            s.style.width = 'auto';
+            s.style.height = '220px';
+            s.style.border = '1px solid rgba(255,255,255,.08)';
+            s.style.borderRadius = '16px';
+            s.style.cursor = 'pointer';
+            s.style.padding = '18px';
+            s.style.opacity = i === idx ? '1' : '.88';
+            s.onclick = () => { idx = i; setOverview(false); render(); };
+          });
+        }else{
+          frame.style.overflow = 'hidden';
+          frame.style.padding = '0';
+          slides.style.display = 'flex';
+          slides.style.gridTemplateColumns = '';
+          slides.style.gap = '0';
+          slides.style.height = '100%';
+          Array.from(slides.children).forEach((s) => {
+            s.style.width = '100%';
+            s.style.height = '100%';
+            s.style.border = 'none';
+            s.style.borderRadius = '';
+            s.style.cursor = '';
+            s.style.padding = '';
+            s.style.opacity = '1';
+            s.onclick = null;
+          });
+        }
+      }
+
+      // fullscreen toggle
+      async function toggleFullscreen(){
+        try{
+          if(!document.fullscreenElement){
+            await document.documentElement.requestFullscreen();
+          }else{
+            await document.exitFullscreen();
+          }
+        }catch(_){}
+      }
+
+      // hash init
+      if(location.hash){
+        const n = parseInt(location.hash.replace('#',''), 10);
+        if(!Number.isNaN(n)) idx = clamp(n-1, 0, total-1);
+      }
+      render();
+
+      window.addEventListener('keydown', (e) => {
+        if(overview){
+          if(e.key === 'Escape'){ setOverview(false); render(); }
+          return;
+        }
+
+        if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){
+          e.preventDefault(); next();
+        } else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){
+          e.preventDefault(); prev();
+        } else if(e.key === 'Home'){
+          e.preventDefault(); first();
+        } else if(e.key === 'End'){
+          e.preventDefault(); last();
+        } else if(e.key === 'Escape'){
+          e.preventDefault(); setOverview(true);
+        } else if(e.key === 'Enter'){
+          e.preventDefault(); toggleFullscreen();
+        }
+      });
+
+      // click zones
+      frame.addEventListener('click', (e) => {
+        if(overview) return;
+        const rect = frame.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        if(x < rect.width * 0.35) prev(); else next();
+      }, {passive:true});
+
+      // swipe
+      let startX = null;
+      frame.addEventListener('touchstart', (e) => {
+        if(overview) return;
+        startX = e.touches[0].clientX;
+      }, {passive:true});
+      frame.addEventListener('touchend', (e) => {
+        if(overview) return;
+        if(startX == null) return;
+        const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : startX;
+        const dx = endX - startX;
+        if(Math.abs(dx) > 40){
+          if(dx < 0) next(); else prev();
+        }
+        startX = null;
+      }, {passive:true});
+    })();
+  </script>
+</body>
+</html>

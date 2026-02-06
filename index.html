@@ -667,6 +667,81 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* Overview (ESC): titles only */
+    .overview-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .overview-item {
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .02);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .overview-item:hover {
+      border-color: rgba(255, 138, 31, .28);
+      background: rgba(255, 138, 31, .06);
+    }
+
+    .overview-item.active {
+      border-color: rgba(255, 138, 31, .35);
+      background: rgba(255, 138, 31, .08);
+    }
+
+    .overview-item .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: rgba(255, 255, 255, .62);
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .overview-item .num {
+      font-family: var(--mono);
+      padding: 3px 8px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .02);
+    }
+
+    .overview-item .ey {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .overview-item .ey .b {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(255, 138, 31, .10);
+    }
+
+    .overview-item .title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -.2px;
+      color: rgba(255, 255, 255, .92);
+      line-height: 1.2;
+    }
+
+    .overview-item .sub {
+      margin-top: 6px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, .60);
+      line-height: 1.35;
+    }
   </style>
 </head>
 
@@ -1041,8 +1116,7 @@
             <div class="eyebrow"><span class="bullet"></span>Преимущества инфраструктуры</div>
             <h2>Почему Viarune лучше, чем in-house DevOps</h2>
             <p class="lead">
-              Снижаем стоимость владения инфраструктурой, ускоряем запуск и берём на себя операционку — от развёртывания
-              до поддержки 24/7.
+              Снижаем стоимость инфраструктуры, ускоряем запуск, масштабируемся под потребности
             </p>
 
             <div class="grid3">
@@ -1056,7 +1130,7 @@
               </div>
               <div class="card">
                 <h3>🧠 Архитекторы и DevOps</h3>
-                <p>10+ лет опыта в DevOps и продакшен-контурах, проектируем под рост.</p>
+                <p>10+ лет опыта в DevOps и системном админсетрировании</p>
               </div>
             </div>
 
@@ -1136,7 +1210,8 @@
                 <h3>Клиент под NDA</h3>
                 <p><b style="color:rgba(255,255,255,.88)">Задача:</b> много стендов, сложные пайплайны, прод-сервисы.
                 </p>
-                <p><b style="color:rgba(255,255,255,.88)">Решение:</b> 5 стендов, GitLab пайплайны, Менеджер задач/Wiki-система,
+                <p><b style="color:rgba(255,255,255,.88)">Решение:</b> 5 стендов, GitLab пайплайны, Менеджер
+                  задач/Wiki-система,
                   мониторинг и трассировка.</p>
                 <p><b style="color:rgba(255,255,255,.88)">Эффект:</b> экономия до 80% (500k+ ₽/мес).</p>
               </div>
@@ -1156,7 +1231,8 @@
                 <h3>FAQ (коротко)</h3>
                 <div class="tag acc"><span class="dot2"></span>Как быстро запускается? — 2-4 дня до рабочего контура
                 </div>
-                <div class="tag ok"><span class="dot2"></span>Можно ли на собственном железе? — Да (on-prem / гибрид)</div>
+                <div class="tag ok"><span class="dot2"></span>Можно ли на собственном железе? — Да (on-prem / гибрид)
+                </div>
                 <div class="tag"><span class="dot2"></span>Можно ли подключать свои сервисы? — Да</div>
                 <div class="tag"><span class="dot2"></span>Где хранятся данные? — В РФ (по требованиям)</div>
                 <div class="tag"><span class="dot2"></span>Можно ли развернуть платное ПО? — Да</div>
@@ -1166,15 +1242,21 @@
                 <h3>Контакты</h3>
                 <div class="metric">
                   <div class="k">Telegram</div>
-                  <a href="https://t.me/viarune_studio"><div class="v">@viarune_studio</div></a>
+                  <a href="https://t.me/viarune_studio">
+                    <div class="v">@viarune_studio</div>
+                  </a>
                 </div>
                 <div class="metric">
                   <div class="k">Email</div>
-                  <a href="mailto:cloud@viarune.com"><div class="v">cloud@viarune.com</div></a>
+                  <a href="mailto:cloud@viarune.com">
+                    <div class="v">cloud@viarune.com</div>
+                  </a>
                 </div>
                 <div class="metric">
                   <div class="k">Телефон</div>
-                  <a href="tel:+79090660955"><div class="v">+7 909 066 0955</div></a>
+                  <a href="tel:+79090660955">
+                    <div class="v">+7 909 066 0955</div>
+                  </a>
                 </div>
               </div>
 
@@ -1192,7 +1274,7 @@
         <div class="bar" id="bar"></div>
       </div>
       <div class="pager" id="pager">01 / 12</div>
-      <div class="hint">ESC — обзор · Enter — полноэкранный</div>
+      <div class="hint">ESC — выбор слайда · Enter — во весь экран</div>
     </div>
   </div>
 
@@ -1223,48 +1305,78 @@
       function first() { idx = 0; render(); }
       function last() { idx = total - 1; render(); }
 
-      // overview mode (ESC)
+      // overview mode (ESC) — titles only (stable)
       let overview = false;
+      let overviewEl = null;
+
       function setOverview(on) {
         overview = on;
+
         if (on) {
-          slides.style.transition = 'transform 280ms cubic-bezier(.2,.9,.2,1)';
-          slides.style.transform = 'translateX(0)';
+          // создаём список
           frame.style.overflow = 'auto';
-          frame.style.padding = '18px';
-          slides.style.display = 'grid';
-          slides.style.gridTemplateColumns = 'repeat(auto-fit, minmax(320px, 1fr))';
-          slides.style.gap = '14px';
-          slides.style.height = 'auto';
-          Array.from(slides.children).forEach((s, i) => {
-            s.style.width = 'auto';
-            s.style.height = '220px';
-            s.style.border = '1px solid rgba(255,255,255,.08)';
-            s.style.borderRadius = '16px';
-            s.style.cursor = 'pointer';
-            s.style.padding = '18px';
-            s.style.opacity = i === idx ? '1' : '.88';
-            s.onclick = () => { idx = i; setOverview(false); render(); };
+          frame.style.padding = '0';
+
+          // прячем слайды (чтобы не было reflow/масштабирования)
+          slides.style.display = 'none';
+
+          overviewEl = document.createElement('div');
+          overviewEl.className = 'overview-list';
+
+          const items = Array.from(slides.children);
+          const total = items.length;
+
+          items.forEach((s, i) => {
+            const eyebrow = s.querySelector('.eyebrow')?.innerText?.trim() || 'Слайд';
+            const h2 = s.querySelector('h1,h2')?.innerText?.trim() || `Слайд ${i + 1}`;
+            const lead = s.querySelector('.lead')?.innerText?.trim() || '';
+
+            const card = document.createElement('div');
+            card.className = 'overview-item' + (i === idx ? ' active' : '');
+            card.innerHTML = `
+        <div class="meta">
+          <div class="ey"><span class="b"></span><span>${escapeHtml(eyebrow)}</span></div>
+          <span class="num">${String(i + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}</span>
+        </div>
+        <div class="title">${escapeHtml(h2)}</div>
+        <div class="sub">${escapeHtml(truncate(lead, 140))}</div>
+      `;
+
+            card.onclick = () => {
+              idx = i;
+              setOverview(false);
+              render();
+            };
+
+            overviewEl.appendChild(card);
           });
+
+          frame.appendChild(overviewEl);
+
         } else {
+          // убираем список
+          if (overviewEl) {
+            frame.removeChild(overviewEl);
+            overviewEl = null;
+          }
           frame.style.overflow = 'hidden';
           frame.style.padding = '0';
+
           slides.style.display = 'flex';
-          slides.style.gridTemplateColumns = '';
-          slides.style.gap = '0';
-          slides.style.height = '100%';
-          Array.from(slides.children).forEach((s) => {
-            s.style.width = '100%';
-            s.style.height = '100%';
-            s.style.border = 'none';
-            s.style.borderRadius = '';
-            s.style.cursor = '';
-            s.style.padding = '';
-            s.style.opacity = '1';
-            s.onclick = null;
-          });
         }
       }
+
+      // helpers
+      function truncate(s, n) {
+        if (!s) return '';
+        return s.length > n ? (s.slice(0, n - 1) + '…') : s;
+      }
+      function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, (m) => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+        }[m]));
+      }
+
 
       // fullscreen toggle
       async function toggleFullscreen() {
